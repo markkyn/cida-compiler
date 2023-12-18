@@ -84,8 +84,8 @@ start
 
 -- resposta da pergunta final
 
-  show ("na sequencia digitada existe numero par e nao divisivel por  tres?" x)
-  show ("na sequencia digitada existe numero par ou divisivel por  tres?" y)
-  show ("na sequencia digitada existe numero par ou-excluisivo divisivel por  tres?" z)
+  show ("na sequencia digitada existe numero par e nao divisivel por  tres?" + x)
+  show ("na sequencia digitada existe numero par ou divisivel por  tres?" + y)
+  show ("na sequencia digitada existe numero par ou-excluisivo divisivel por  tres?" + z)
 
 finish

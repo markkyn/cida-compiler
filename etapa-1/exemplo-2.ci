@@ -18,13 +18,13 @@ start
         as long as ( i>j ) do
             start
                   show(i).
-                  i << i - 1
+                  i << i - 1.
             finish
       otherwise 
           as long as (i<=j) do
             start
                   show(i).
-                  i << i + 1
+                  i << i + 1.
             finish
       
 finish

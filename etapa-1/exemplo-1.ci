@@ -20,31 +20,31 @@ start
 -- recebe variaveis
       capture (i).
       capture (J).
-      show("digite um tipo de operação matematica" ).
+     
 
 -- realiza operacoes basicas e print 
 
    soma << i + j.
-    show("soma: " soma).
+    show("soma: " + soma).
    subtracao << i - j.
-    show("subtracao:" subtracao).
+    show("subtracao:" + subtracao).
    multiplicacao << i * j.
-    show("multiplicacao: " multiplicacao).
+    show("multiplicacao: " + multiplicacao).
    subtracao << i / j.
-    show("subtracao: " subtracao).
+    show("subtracao: " + subtracao).
    resto << i % j.
-    show("resto: " resto).
+    show("resto: " + resto).
     
 -- modulo de i
    in case that ( i==0 ) do
      show("i igual a zero"). 
    otherwise
      in case that (i > 0) do 
-       show("modulo de  i : "i).
+       show("modulo de  i : " + i).
      in case that (i < 0) do
         start
           modulo << - i. -- equivalente a i * (-1)
-          show("modulo de  i : "modulo).
+          show("modulo de  i : " + modulo).
         finish
 
       
@@ -53,13 +53,10 @@ start
      show("j igual a zero"). 
    otherwise
      in case that (j > 0) do 
-       show("modulo de  j : "i).
+       show("modulo de  j : " + j).
      in case that (j < 0) do
       start
         modulo << j*(-1).
-        show("modulo de  j : "modulo).
+        show("modulo de  j : " + modulo).
       finish
-    
-    
-    
 finish
