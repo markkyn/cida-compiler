@@ -13,18 +13,20 @@ start
    alterable number vector [10] numeros.
    alterable number vector [10] numerosTwo.
    alterable number vector [10] numerosThree.
+   alterable number vector [10] numerosImpar.
    alterable answer x.
    alterable answer y.
    alterable answer z.
    x << no.
    y << no.
    z << no.
+   w << no.
    
 --(numeros pares e nao divisiveis por Tres)   
 -- recebe variaveis 
    considering i from 1 to 10 by 1 do
-      in case that ((i % 2) != 0) and ((i % 3) == 0) do
-        -- TODO: Incluir comando aqui    
+      in case that ((i % 2) == 0) and not ((i % 3) == 0) do
+        show("o numero nao e divisivel por 3")
       otherwise
         start
           x << yes.
@@ -40,7 +42,7 @@ start
 --(numeros pares ou sao divisiveis por tres) 
 -- recebe variaveis  
    considering i from 1 to 10 by 1 do
-      in case that ((i % 2) 0= 0) or ((i % 3) == 0) do  
+      in case that ((i % 2) == 0) or ((i % 3) == 0) do  
         start
           y << yes.  
           capture (numerosTwo[i]).        
@@ -55,16 +57,30 @@ start
 -- (numeros pares ou-excluisivo divisiveis por tres) 
 -- recebe variaveis 
    considering i from 1 to 10 by 1 do
-      in case that ((i % 2) 0= 0) xor ((i % 3) == 0) do   
+      in case that ((i % 2) == 0) xor ((i % 3) == 0) do   
         start
           z << yes. 
           capture (numerosThree[i]).        
         finish
-        
+
 -- print na tela        
   show("esses numeros ou sao pares ou-excluisivo divisiveis por tres:"). 
   considering i from 1 to 10 by 1 do
         show (numerosThree [i]).       
+
+--(numeros impares e divisiveis por tres)
+  considering i from 1 to 10 by 1 do
+    in case that ((i % 2 ) != 0) and ( (i % 3) == 0) do
+      start
+        w << yes.
+        capture(numerosImpar[i]).
+      finish
+  
+  show("esses numeros sao impares e divisiveis por 3:").
+  considering i from 1 to 10 by 1 do
+    show(numerosImpar[i]).
+  
+  show("\n").
 
 -- resposta da pergunta final
 

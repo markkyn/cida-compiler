@@ -43,7 +43,7 @@ start
        show("modulo de  i : "i).
      in case that (i < 0) do
         start
-          modulo << i*(-1).
+          modulo << - i. -- equivalente a i * (-1)
           show("modulo de  i : "modulo).
         finish
 
