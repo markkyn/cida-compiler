@@ -13,7 +13,9 @@ start
    alterable number vector [10] numeros.
    alterable number vector [10] numerosTwo.
    alterable number vector [10] numerosThree.
-   alterable answer x, y, z.
+   alterable answer x.
+   alterable answer y.
+   alterable answer z.
    x << no.
    y << no.
    z << no.
@@ -21,11 +23,14 @@ start
 --(numeros pares e nao divisiveis por Tres)   
 -- recebe variaveis 
    considering i from 1 to 10 by 1 do
-      in case that ((i % 2) != 0) and ((i % 3) == 0) do    
-      otherwise 
-        x << yes.
-        capture (numeros[i]).
-        
+      in case that ((i % 2) != 0) and ((i % 3) == 0) do
+        -- TODO: Incluir comando aqui    
+      otherwise
+        start
+          x << yes.
+          capture (numeros[i]).
+        finish
+
 -- print na tela        
   show("esses sao numeros pares e nao divisiveis por Tres:"). 
   considering i from 1 to 10 by 1 do
@@ -36,9 +41,11 @@ start
 -- recebe variaveis  
    considering i from 1 to 10 by 1 do
       in case that ((i % 2) 0= 0) or ((i % 3) == 0) do  
-        y << yes.  
-        capture (numerosTwo[i]).        
-     
+        start
+          y << yes.  
+          capture (numerosTwo[i]).        
+        finish
+
 -- print na tela        
   show("esses numeros ou sao pares ou sao divisiveis por tres:"). 
   considering i from 1 to 10 by 1 do
@@ -49,8 +56,10 @@ start
 -- recebe variaveis 
    considering i from 1 to 10 by 1 do
       in case that ((i % 2) 0= 0) xor ((i % 3) == 0) do   
-        z << yes. 
-        capture (numerosThree[i]).        
+        start
+          z << yes. 
+          capture (numerosThree[i]).        
+        finish
         
 -- print na tela        
   show("esses numeros ou sao pares ou-excluisivo divisiveis por tres:"). 
