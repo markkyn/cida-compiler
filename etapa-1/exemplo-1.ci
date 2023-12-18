@@ -1,0 +1,65 @@
+
+
+
+
+--  Possibilidades de operacao matematicas
+
+code PosibilidadesOperacoes
+start
+
+ -- delaracao de variaveis
+      alterable number i.
+      alterable number j.
+      alterable number soma.
+      alterable number subtracao.
+      alterable number multiplicacao.
+      alterable number subtracao.
+      alterable number resto.
+      alterable number modulo.
+      
+-- recebe variaveis
+      capture (i).
+      capture (J).
+      show("digite um tipo de operação matematica" ).
+
+-- realiza operacoes basicas e print 
+
+   soma << i + j.
+    show("soma: " soma).
+   subtracao << i - j.
+    show("subtracao:" subtracao).
+   multiplicacao << i * j.
+    show("multiplicacao: " multiplicacao).
+   subtracao << i / j.
+    show("subtracao: " subtracao).
+   resto << i % j.
+    show("resto: " resto).
+    
+-- modulo de i
+   in case that ( i==0 ) do
+     show("i igual a zero"). 
+   otherwise
+     in case that (i > 0) do 
+       show("modulo de  i : "i).
+     in case that (i < 0) do
+        start
+          modulo << i*(-1).
+          show("modulo de  i : "modulo).
+        finish
+
+      
+-- modulo de j       
+   in case that ( j==0) do
+     show("j igual a zero"). 
+   otherwise
+     in case that (j > 0) do 
+       show("modulo de  j : "i).
+     in case that (j < 0) do
+      start
+        modulo << j*(-1).
+        show("modulo de  j : "modulo).
+      finish
+    
+    
+    
+finish

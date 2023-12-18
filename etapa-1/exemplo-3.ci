@@ -1,0 +1,66 @@
+
+
+
+-- Quais desses 10 primeiros numeros: são pares e não divisiveis por tres e quais são pares ou divisiveis por tres? 
+-- faca tem o ou-excluisivo pra esse ultimo caso !
+-- ao final diga se existe pelo menos um representante de casa seguimento
+
+code numerosParesDivTres
+start 
+
+-- delaracao de variaveis 
+   alterable number i.
+   alterable number vector [10] numeros.
+   alterable number vector [10] numerosTwo.
+   alterable number vector [10] numerosThree.
+   alterable answer x, y, z.
+   x << no.
+   y << no.
+   z << no.
+   
+--(numeros pares e nao divisiveis por Tres)   
+-- recebe variaveis 
+   considering i from 1 to 10 by 1 do
+      in case that ((i % 2) != 0) and ((i % 3) == 0) do    
+      otherwise 
+        x << yes.
+        capture (numeros[i]).
+        
+-- print na tela        
+  show("esses sao numeros pares e nao divisiveis por Tres:"). 
+  considering i from 1 to 10 by 1 do
+        show (numeros [i]).       
+        
+        
+--(numeros pares ou sao divisiveis por tres) 
+-- recebe variaveis  
+   considering i from 1 to 10 by 1 do
+      in case that ((i % 2) 0= 0) or ((i % 3) == 0) do  
+        y << yes.  
+        capture (numerosTwo[i]).        
+     
+-- print na tela        
+  show("esses numeros ou sao pares ou sao divisiveis por tres:"). 
+  considering i from 1 to 10 by 1 do
+        show (numerosTwo[i]). 
+              
+
+-- (numeros pares ou-excluisivo divisiveis por tres) 
+-- recebe variaveis 
+   considering i from 1 to 10 by 1 do
+      in case that ((i % 2) 0= 0) xor ((i % 3) == 0) do   
+        z << yes. 
+        capture (numerosThree[i]).        
+        
+-- print na tela        
+  show("esses numeros ou sao pares ou-excluisivo divisiveis por tres:"). 
+  considering i from 1 to 10 by 1 do
+        show (numerosThree [i]).       
+
+-- resposta da pergunta final
+
+  show ("na sequencia digitada existe numero par e nao divisivel por  tres?" x)
+  show ("na sequencia digitada existe numero par ou divisivel por  tres?" y)
+  show ("na sequencia digitada existe numero par ou-excluisivo divisivel por  tres?" z)
+
+finish

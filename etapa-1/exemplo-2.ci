@@ -1,0 +1,31 @@
+
+
+
+-- mostra ou os sucessores de 10 e menores que i ou os antecessores de 10 maiores i, respectivamente
+
+code sucessoresAntecessores
+start
+
+ -- delaracao de variaveis 
+      alterable number i.
+      unalterable number j << 10.
+
+-- recebe variaveis
+      capture (i).
+
+-- loop ( mostra ou os sucessores de j e menores que i ou os antecessores de j maiores i, respectivamente )
+      in case that ( i>j ) do
+        as long as ( i>j ) do
+            start
+                  show(i).
+                  i << i - 1
+            finish
+      otherwise 
+          as long as (i<=j) do
+            start
+                  show(i).
+                  i << i + 1
+            finish
+      
+finish
+      
