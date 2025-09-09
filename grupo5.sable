@@ -1,0 +1,341 @@
+Package cida;
+Helpers
+ 	digito = ['0'..'9'];
+	true  = 'yes';
+	false = 'no';
+
+
+ 	local = 'local';
+	expr = 'expr';
+	recebe ='<<';
+	otherwise = ' otherwise';
+	dec_casam = ' dec_casam';
+	dec_sem_casam = ' dec_sem_casam';
+	declaracao = 'declaracao';
+	comando = 'comando';
+	
+	ascii = [33..255]; // alterei para 33 pra ignorar os Helpers ja definidos de  RC e NL
+    negativo = 45;
+	espaco = ' ';
+	rc = 13;
+	nl = 10;
+	tab = 9;
+	hifen = '-';
+    chave_esq = '{';
+	chave_dir = '}';
+	bloc_esq = '[';
+	bloc_dir = ']';
+	aspas = 39;
+	aspas_duplas = 34;
+	ponto = '.';
+	underline = 95;
+	virgula = 44;
+	
+ 	letra_min = ['a' .. 'z'];
+	letra_max = ['A' .. 'Z'];
+	letra = letra_min | letra_max;
+	
+
+Tokens
+    
+	// declaracao de int e real
+	
+	// palavras reservadas 
+	
+	int_t = 'int';
+	real_t = 'real';
+	 
+	recebe = '<<';
+	answer_t = 'answer';
+	number_t = 'number';
+	symbol_t = 'symbol';
+	string_t = 'string';
+	vector_t = 'vector';
+	
+	code = 'code';
+	start = 'start';
+	finish   = 'finish';
+	identificador = 'id';
+	
+	unalterable = 'unalterable';
+	alterable  = 'alterable';
+	
+	show = 'show';
+	capture = 'capture';
+	
+	// pontuacao
+
+	virgula = ',';
+	ponto = '.';
+	
+   // aritimeticos
+	add = '+';
+	sub = '-';
+	mul = '*';
+	div = '/';
+	mod = '%';
+  
+		// Relacionais
+	maior = '>';
+	maior_igual = '>=';
+	menor = '<';
+	menor_igual = '<=';
+
+	igual_a = '==';
+	diferente_a = '!=';
+	
+	  // Palavras reservadas
+	
+		// Booleanos
+	not = 'not';
+	or = 'or';
+	xor = 'xor';
+	and = 'and';
+	
+	   // Estrutura de Controle
+	as= 'as';
+	long  = 'long';
+	in = 'in';  
+	case = 'case';
+	that = 'that';
+	otherwise = 'otherwise';
+	do = 'do';
+	considering ='considering';  
+	from = 'from'; 
+	to = 'to'; 
+	by = 'by';
+	
+	// Numeros
+
+	// Simbolos
+	par_esq = '(';
+	par_dir = ')';
+	chave_esq = '{';
+	chave_dir = '}';
+	bloc_esq = '[';
+	bloc_dir = ']';
+	vazio = (espaco | rc | nl | tab)+;
+	end_command = '.';
+	
+	// Comentarios
+	comment_line  = '--' (espaco | tab | letra | digito | ascii)* (rc | nl | rc nl);
+	comment_block = hifen hifen  (espaco | rc | nl | tab | letra | digito)* hifen hifen;
+
+    // answer = true | false; // Marcos: Conversei com a professora e ela confirmou que deve ser um Token pra true e um Token para False, answer é resolvido no sintatico
+	true = 'yes';
+	false = 'no';
+	symbol = aspas ascii aspas;
+	id = letra*;
+	string = aspas_duplas (letra | espaco | ascii )* aspas_duplas;
+	
+	inteiro = digito+;  
+	real = (digito+)(ponto)(digito+); // Duvida: o cida deve separar real e inteiro/numero
+	//num = ((negativo)?(digito)+) | (negativo)?(digito)+; // Dúvida: isso acaba quebrando em caso de i -1
+
+	
+	// auxiliares 
+	aux_local_virgula = local(espaco)*(virgula);
+	aux_expr_virgula = expr(espaco)*(virgula) ;
+	aux_bloc_expr_bloc = bloc_esq(espaco)*(expr)(espaco)*bloc_dir;
+	aux_recbe_expr = recebe(espaco)*(expr);
+	aux_otherwise_dec_casam =   otherwise(espaco)*(comando);
+	aux_otherwise_dec_sem_casam = otherwise(espaco)*(dec_sem_casam) ;
+	
+Ignored Tokens
+ 	comment_line,
+	vazio;
+ 
+Productions
+	programa {-> a_programa} =
+     {prog} code id bloco {-> New a_programa.a_prog(bloco.a_bloco)};
+   
+		bloco {-> a_bloco}=
+		  {bloco} start  declaracao* comando1*  finish {-> New a_bloco.a_bloco([declaracao.a_declaracao], [comando1.a_comando])};
+   
+  
+			declaracao {-> a_declaracao} = 
+			   {alterable} alterable tipo id ponto {-> New a_declaracao.a_alterable(tipo.a_tipo, id)} 
+			 | {unalterable_atrib} unalterable tipo_base id recebe expr ponto {-> New a_declaracao.a_unalterable_atrib(tipo_base.a_tipo, id, expr.a_expr)} ;
+			 | {unalterable} unalterable tipo_base id  {-> New a_declaracao.a_unalterable(tipo_base.a_tipo, id)}
+   
+				tipo {-> a_tipo }= 
+					  {tipo_base} tipo_base	{-> tipo_base.a_tipo }
+					| {vector} tipo_base vector_t  dimensao+ {-> New a_tipo.a_vector(tipo_base.a_tipo, [dimensao.a_dimensao])};
+  
+					dimensao {-> a_dimensao } =
+					 bloc_esq expr bloc_dir {-> New a_dimensao.a_dimensao(expr.a_expr)}; // Marcos: incluí para aceitar multidimensao de vetor
+   
+				tipo_base {-> a_tipo }=
+					  {answer}  answer_t {-> New a_tipo.a_answer_t(answer_t)}
+					| {number}  number_t {-> New a_tipo.a_number_t(number_t)}
+					| {symbol}  symbol_t {-> New a_tipo.a_symbol_t(symbol_t)};
+   
+			comando1 {-> a_comando} =
+				{comando} comando {-> comando.a_comando };
+			
+				comando {-> a_comando } =
+				    {atribuicao} local recebe expr ponto {-> New a_comando.a_atribuicao(local.a_local, expr.a_expr )}
+					// Duvida : nao estou conseguindo entender pq o params nao esta podendo ser passado no AST
+				  | {capture} capture par_esq params+ par_dir ponto {-> New a_comando.a_capture([params.a_params])}
+				  | {show} show par_esq params+ par_dir ponto {-> New a_comando.a_show([params.a_params])}
+				  | {comando_if} comando_if { -> comando_if.a_comando}
+				  | {bloco} bloco {-> New a_comando.a_bloco(bloco.a_bloco)};
+				  // | {show}      show  par_esq  aux_expr_virgula*    expr     par_dir ponto // mesma coisa do capture
+				  // | {capture} capture par_esq  aux_local_virgula*  local    par_dir ponto  // Marcos: alterei para aceitar multiplos parametros
+     
+	 				params {-> a_params } = 
+						  {expr} expr virgula* {-> New a_params.a_expr(expr.a_expr)}
+						//|  {id} id virgula* // Estava gerando Reduce Reduce (acaba que o Expr ja possui todos esses tipos)
+						//| {int} inteiro virgula*
+						//| {symbol} symbol virgula*
+						//| {string} string virgula*
+						//| {answer} answer virgula*
+						;
+
+					local { -> a_local } =
+					   {id} id {-> New a_local.a_id(id)}
+					 | {local} local bloc_esq expr bloc_dir {-> New a_local.a_local(local.a_local, expr.a_expr)}
+					 ;
+      
+					comando_if {-> a_comando} =
+						{dec_casam} dec_casam {-> dec_casam.a_comando };
+
+
+						dec_casam {-> a_comando } =    
+							  {if} in case that par_esq  expr  par_dir  do [case_true]:comando otherwise [case_false]:comando 
+							  		{-> New a_comando.a_case_do_other(expr.a_expr, case_true.a_comando, case_false.a_comando)}
+							| outra {-> outra.a_comando};
+							
+							outra { -> a_comando } =
+							{as_long_as }  [as1]:as long [as2]:as  par_esq  expr  par_dir  do comando 
+											{ -> New a_comando.a_as_long_as(expr.a_expr, comando.a_comando)}
+							| {considering}  considering local from  [de]:expr to [para]:expr by [pulando]:expr do comando
+											{ -> New a_comando.a_considering(de.a_expr, para.a_expr, pulando.a_expr, comando.a_comando)}
+							;
+   
+						dec_sem_casam = // Marcos: Não estou sabendo como fazer o caso if sem otherwise (6_3_cond com bloco)
+							 {sozinho} in case that par_esq  expr  par_dir  do comando1
+							|{sem_casam}  in case that par_esq  expr  par_dir  do comando otherwise comando1;
+   
+    
+ // Marcos: Talvez talvez incluir id na expressao ( i < 3 )
+    
+	expr { -> a_expr } = 
+	{expr2} expr2			{-> expr2.a_expr}
+	|{xor} expr xor expr2	{-> New a_expr.a_xor(expr.a_expr, expr2.a_expr)}
+	|{or}  expr or  expr2   {-> New a_expr.a_or(expr.a_expr, expr2.a_expr)}
+	|{and} expr and expr2   {-> New a_expr.a_and(expr.a_expr, expr2.a_expr)};
+ 
+
+  expr2 { -> a_expr } = 
+   {expr3} expr3			{-> expr3.a_expr}
+  |{maior}        expr2  maior         expr3 {-> New a_expr.a_maior(expr2.a_expr, expr3.a_expr)}
+  |{menor}        expr2  menor         expr3 {-> New a_expr.a_menor(expr2.a_expr, expr3.a_expr)}
+  |{maior_igual}  expr2  maior_igual   expr3 {-> New a_expr.a_maior_igual(expr2.a_expr, expr3.a_expr)}
+  |{menor_igual}  expr2  menor_igual   expr3 {-> New a_expr.a_menor_igual(expr2.a_expr, expr3.a_expr)}
+  |{igual_a} 	  expr2  igual_a       expr3 {-> New a_expr.a_igual_a(expr2.a_expr, expr3.a_expr)}
+  |{diferente_a}  expr2  diferente_a   expr3{-> New a_expr.a_diferente_a(expr2.a_expr, expr3.a_expr)};
+	
+  
+ 
+ expr3 { -> a_expr } =
+   {fator} fator 			{-> fator.a_expr} 
+  |{add} expr3 add fator 	{-> New a_expr.a_add(expr3.a_expr, fator.a_expr)}
+  |{sub} expr3 sub fator	{-> New a_expr.a_sub(expr3.a_expr, fator.a_expr)}
+  ;
+  
+
+ fator { -> a_expr } =
+   {fator2} fator2 			{-> fator2.a_expr}
+  |{mul} fator mul fator2	{-> New a_expr.a_mul(fator.a_expr, fator2.a_expr)}
+  |{div} fator div fator2	{-> New a_expr.a_div(fator.a_expr, fator2.a_expr)}
+  |{mod} fator mod fator2	{-> New a_expr.a_mod(fator.a_expr, fator2.a_expr)}
+  ;
+  
+ fator2 { -> a_expr } =
+    {termo} termo 				{-> termo.a_expr }
+   |{not}  fator2 not termo		{-> New a_expr.a_not(fator2.a_expr, termo.a_expr)}
+   ;
+  
+  termo { -> a_expr } =
+    {inteiro} inteiro { -> New a_expr.a_inteiro(inteiro) }
+   |{real} real { -> New a_expr.a_real(real)}
+   |{string} string {-> New a_expr.a_string(string)}
+   |{symbol} symbol {-> New a_expr.a_symbol(symbol)}
+   |{answer} answer {-> New a_expr.a_answer(answer.a_answer) } // Answer passa ou fica? // [265,21] expecting #PAExpr# when #PAAnswer# was found
+   |{id} id 		{-> New a_expr.a_id(id)}	// Marcos: incluí por conta do caso 02_2 
+   |{par} par_esq expr par_dir { -> New a_expr.a_par(expr.a_expr)}
+   // |{negativo} negativo // Marcos: Estou tendo conflito pra separar um numero negativo da subtracao teste: 08_3
+   ;
+   
+   answer { -> a_answer } = 
+	 {true} true	{-> New a_answer.a_true(true) }
+	|{false} false	{-> New a_answer.a_false(false)}
+	;
+   
+   //negativo = sub inteiro;
+
+
+Abstract Syntax Tree
+	a_programa = {a_prog} a_bloco;
+	
+		a_bloco = {a_bloco} a_declaracao* a_comando*;
+
+			a_declaracao = 
+			     {a_alterable} a_tipo id
+			   | {a_unalterable} a_tipo id
+			   | {a_unalterable_atrib} a_tipo id a_expr;
+			
+				a_tipo = 
+					  {a_vector} a_tipo a_dimensao+
+					| {a_answer_t} answer_t
+					| {a_symbol_t} symbol_t
+					| {a_number_t} number_t
+					;
+
+					a_dimensao = {a_dimensao} a_expr;
+
+			a_comando = 
+				  {a_atribuicao} a_local a_expr
+				| {a_capture} a_params+
+				| {a_show} a_params+
+				| {a_bloco} a_bloco
+				| {a_case_do_other} a_expr [do]:a_comando [otherwise]:a_comando 
+				| {a_as_long_as} a_expr a_comando
+				| {a_considering} [de]:a_expr [para]:a_expr [pulando]:a_expr a_comando
+				;
+
+				a_params = {a_expr} a_expr; 
+
+				a_local = 
+					  {a_id} id
+					| {a_local} a_local a_expr
+					;
+	a_expr = 
+		  {a_xor}	[esq]:a_expr	[dir]:a_expr
+		| {a_or}	[esq]:a_expr	[dir]:a_expr
+		| {a_and}	[esq]:a_expr	[dir]:a_expr
+		| {a_add}	[esq]:a_expr	[dir]:a_expr
+		| {a_sub}	[esq]:a_expr	[dir]:a_expr
+		| {a_div}	[esq]:a_expr	[dir]:a_expr
+		| {a_mul}	[esq]:a_expr	[dir]:a_expr
+		| {a_mod}	[esq]:a_expr	[dir]:a_expr
+		| {a_not}	[esq]:a_expr	[dir]:a_expr
+		| {a_maior} [esq]:a_expr	[dir]:a_expr
+		| {a_maior_igual} 			[esq]:a_expr [dir]:a_expr
+		| {a_menor} 				[esq]:a_expr	[dir]:a_expr
+		| {a_menor_igual} 			[esq]:a_expr	[dir]:a_expr
+		| {a_igual_a} 				[esq]:a_expr	[dir]:a_expr
+		| {a_diferente_a} 			[esq]:a_expr	[dir]:a_expr
+		| {a_inteiro}	inteiro
+		| {a_real}		real
+		| {a_string}	string
+		| {a_symbol}	symbol
+		| {a_id}		id
+		| {a_par}		a_expr
+		| {a_answer}	a_answer
+		;
+	
+	a_answer = 
+	   {a_true} true
+	  |{a_false} false;
